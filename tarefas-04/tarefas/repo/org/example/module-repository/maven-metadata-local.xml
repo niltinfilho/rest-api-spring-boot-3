@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.example</groupId>
+  <artifactId>module-repository</artifactId>
+  <versioning>
+    <release>v1.0</release>
+    <versions>
+      <version>v1.0</version>
+    </versions>
+    <lastUpdated>20240615192913</lastUpdated>
+  </versioning>
+</metadata>

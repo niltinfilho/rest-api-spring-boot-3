@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sat Jun 15 16:29:14 BRT 2024
+module-repository-v1.0.jar>=
+module-repository-v1.0.pom>=

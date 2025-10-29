@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sat Jun 15 16:30:54 BRT 2024
+module-service-v1.0.jar>=
+module-service-v1.0.pom>=
