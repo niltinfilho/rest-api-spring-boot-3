@@ -24,20 +24,22 @@ public class ContatoController {
     // EXERCICIO 2
     @GetMapping("/{id}")
     public ResponseEntity<Contato> getContatoById(@PathVariable Long id) {
-        Contato user = contatoService.getById(id);
-        return ResponseEntity.ok(user);
+        Contato contact = contatoService.getById(id);
+        return ResponseEntity.ok(contact);
     }
 
     // EXERCICIO 3
-    public Object getContatoByNome() {
-
-        return null;
+    @GetMapping()
+    public ResponseEntity<Contato> getContatoByNome(@RequestParam String nome) {
+        Contato contact = contatoService.getContatoByNome(nome);
+        return ResponseEntity.ok(contact);
     }
 
     // EXERCICIO 4
-    public Object getQuantidadeDeContatos() {
-
-        return null;
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getQuantidadeDeContatos() {
+        Integer contact = contatoService.getAll();
+        return ResponseEntity.ok(contact);
     }
 
     // EXERCICIO 5
