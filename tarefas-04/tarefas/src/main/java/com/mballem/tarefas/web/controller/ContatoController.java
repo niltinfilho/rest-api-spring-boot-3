@@ -22,9 +22,10 @@ public class ContatoController {
     }
 
     // EXERCICIO 2
-    public Object getContatoById() {
-
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<Contato> getContatoById(@PathVariable Long id) {
+        Contato user = contatoService.getById(id);
+        return ResponseEntity.ok(user);
     }
 
     // EXERCICIO 3
