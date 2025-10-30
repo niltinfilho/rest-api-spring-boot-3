@@ -2,6 +2,7 @@ package br.app.gestaotec.demo_park_api.service;
 
 import br.app.gestaotec.demo_park_api.entity.Usuario;
 import br.app.gestaotec.demo_park_api.exception.EntityNotFoundException;
+import br.app.gestaotec.demo_park_api.exception.PasswordInvalidException;
 import br.app.gestaotec.demo_park_api.exception.UsernameUniqueViolationException;
 import br.app.gestaotec.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +35,12 @@ public class UsuarioService {
     @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         if (!novaSenha.equals(confirmaSenha)) {
-            throw new RuntimeException("Nova senha não confere com a confirmação.");
+            throw new PasswordInvalidException("Nova senha não confere com a confirmação.");
         }
 
         Usuario user = buscarPorId(id);
         if (!user.getPassword().equals(senhaAtual)) {
-            throw new RuntimeException("Sua senha não confere.");
+            throw new PasswordInvalidException("Sua senha não confere.");
         }
 
         user.setPassword(novaSenha);
