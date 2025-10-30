@@ -1,6 +1,7 @@
 package br.app.gestaotec.demo_park_api.service;
 
 import br.app.gestaotec.demo_park_api.entity.Usuario;
+import br.app.gestaotec.demo_park_api.exception.UsernameUniqueViolationException;
 import br.app.gestaotec.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,11 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        try {
+            return usuarioRepository.save(usuario);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new UsernameUniqueViolationException(String.format("Username '%s' já cadastrado", usuario.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +40,7 @@ public class UsuarioService {
         if (!user.getPassword().equals(senhaAtual)) {
             throw new RuntimeException("Sua senha não confere.");
         }
-        
+
         user.setPassword(novaSenha);
         return user;
     }
