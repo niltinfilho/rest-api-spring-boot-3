@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
@@ -27,7 +29,7 @@ public class Usuario implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 13)
-    private Role role;
+    private Role role = Role.ROLE_CLIENTE;
 
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
@@ -40,10 +42,6 @@ public class Usuario implements Serializable {
 
     @Column(name = "modificado_por")
     private String modificadoPor;
-
-    public enum Role {
-        ROLE_ADMIN, ROLE_CLIENTE
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -62,5 +60,9 @@ public class Usuario implements Serializable {
         return "Usuario{" +
                 "id=" + id +
                 '}';
+    }
+
+    public enum Role {
+        ROLE_ADMIN, ROLE_CLIENTE
     }
 }
