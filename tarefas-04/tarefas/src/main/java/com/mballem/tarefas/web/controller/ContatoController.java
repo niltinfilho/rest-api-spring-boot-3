@@ -60,8 +60,9 @@ public class ContatoController {
     }
 
     // EXERCICIO 7
-    public Object deleteById() {
-
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        String contato = contatoService.delete(id);
+        return ResponseEntity.ok(contato);
     }
 }
