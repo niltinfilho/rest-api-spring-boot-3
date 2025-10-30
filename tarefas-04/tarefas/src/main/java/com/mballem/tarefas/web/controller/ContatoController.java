@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("tarefas/contatos")
@@ -43,15 +46,17 @@ public class ContatoController {
     }
 
     // EXERCICIO 5
-    public Object getContatosByDataNascimento() {
-
-        return null;
+    @GetMapping("/data/{data}")
+    public ResponseEntity<List<Contato>> getContatosByDataNascimento(@PathVariable LocalDate data) {
+        List<Contato> contacts = contatoService.getByDataNascimento(data);
+        return ResponseEntity.ok(contacts);
     }
 
     // EXERCICIO 6
-    public Object updateContatoById() {
-
-        return null;
+    @PatchMapping("/{id}")
+    public ResponseEntity<Contato> updateContatoById(@PathVariable Long id, @RequestBody Contato contato) {
+        Contato contatoAtualizado = contatoService.update(id, contato);
+        return ResponseEntity.ok(contatoAtualizado);
     }
 
     // EXERCICIO 7
