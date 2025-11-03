@@ -24,7 +24,6 @@ public class JwtUtils {
     public static final long EXPIRE_MINUTES = 2;
 
     private JwtUtils() {
-
     }
 
     private static Key generateKey() {
