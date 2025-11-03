@@ -26,16 +26,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         final String token = request.getHeader(JwtUtils.JWT_AUTHORIZATION);
         String path = request.getServletPath();
 
-        if (path.equals("/api/v1/usuarios")
-                || path.equals("/api/v1/auth")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-ui")
-                || path.startsWith("/docs-park")
-                || path.startsWith("/webjars")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         if (token == null || !token.startsWith(JwtUtils.JWT_BEARER)) {
             log.info("JWT Token está nulo, vazio ou não iniciado com 'Bearer '.");
             filterChain.doFilter(request, response);

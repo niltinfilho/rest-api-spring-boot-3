@@ -22,14 +22,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 public class SpringSecurityConfig {
 
-//    private static final String[] DOCUMENTATION_OPENAPI = {
-//            "/docs-park", "/docs-park/", "/docs/index.html",
-//            "/docs-park.html", "/docs-park/**",
-//            "/v3/api-docs/**", "/swagger-ui.html",
-//            "/swagger-ui-custom.html", "/swagger-ui/index.html", "/swagger-ui/**",
-//            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
-//    };
-
     private static final String[] DOCUMENTATION_OPENAPI = {
             "/docs/index.html",
             "/docs-park.html", "/docs-park/**",
