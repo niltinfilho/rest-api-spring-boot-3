@@ -25,3 +25,4 @@ public class JwtUserDetailsService implements UserDetailsService {
         return JwtUtils.createToken(username, role.name().substring("ROLE_".length()));
     }
 }
+

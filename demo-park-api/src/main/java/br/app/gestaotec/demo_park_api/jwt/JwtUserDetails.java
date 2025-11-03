@@ -4,7 +4,6 @@ import br.app.gestaotec.demo_park_api.entity.Usuario;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
-
 public class JwtUserDetails extends User {
 
     private Usuario usuario;

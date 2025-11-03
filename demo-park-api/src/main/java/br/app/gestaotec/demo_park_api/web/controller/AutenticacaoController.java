@@ -29,7 +29,7 @@ public class AutenticacaoController {
 
     @PostMapping("/auth")
     public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto dto, HttpServletRequest request) {
-        log.info("Processo de autenticacao pelo login {}", dto.getUsername());
+        log.info("Processo de autenticação pelo login {}", dto.getUsername());
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
@@ -39,11 +39,11 @@ public class AutenticacaoController {
             JwtToken token = detailsService.getTokenAuthenticated(dto.getUsername());
 
             return ResponseEntity.ok(token);
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException ex) {
             log.warn("Bad Credentials from username '{}'", dto.getUsername());
         }
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais inválidas"));
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais Inválidas"));
     }
 }

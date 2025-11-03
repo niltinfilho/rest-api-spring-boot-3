@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtils {
 
     public static final String JWT_BEARER = "Bearer ";
-    public static final String JWT_AUTHORIZATION = "Authorization ";
+    public static final String JWT_AUTHORIZATION = "Authorization";
     public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
     public static final long EXPIRE_DAYS = 0;
     public static final long EXPIRE_HOURS = 0;
@@ -39,6 +39,7 @@ public class JwtUtils {
     public static JwtToken createToken(String username, String role) {
         Date issuedAt = new Date();
         Date limit = toExpireDate(issuedAt);
+
         String token = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setSubject(username)
@@ -47,16 +48,17 @@ public class JwtUtils {
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
                 .claim("role", role)
                 .compact();
+
         return new JwtToken(token);
     }
 
     private static Claims getClaimsFromToken(String token) {
         try {
-            return Jwts.parserBuilder()
+            return Jwts.parser()
                     .setSigningKey(generateKey()).build()
                     .parseClaimsJws(refactorToken(token)).getBody();
-        } catch (JwtException e) {
-            log.error(String.format("Token inválido %s", e.getMessage()));
+        } catch (JwtException ex) {
+            log.error(String.format("Token invalido %s", ex.getMessage()));
         }
         return null;
     }
@@ -67,12 +69,12 @@ public class JwtUtils {
 
     public static boolean isTokenValid(String token) {
         try {
-            Jwts.parserBuilder()
+            Jwts.parser()
                     .setSigningKey(generateKey()).build()
                     .parseClaimsJws(refactorToken(token));
             return true;
-        } catch (JwtException e) {
-            log.error(String.format("Token inválido %s", e.getMessage()));
+        } catch (JwtException ex) {
+            log.error(String.format("Token invalido %s", ex.getMessage()));
         }
         return false;
     }
