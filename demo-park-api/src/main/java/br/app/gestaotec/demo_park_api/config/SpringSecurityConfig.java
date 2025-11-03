@@ -1,5 +1,6 @@
 package br.app.gestaotec.demo_park_api.config;
 
+import br.app.gestaotec.demo_park_api.jwt.JwtAuthenticationEntryPoint;
 import br.app.gestaotec.demo_park_api.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,8 @@ public class SpringSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 ).build();
     }
 
