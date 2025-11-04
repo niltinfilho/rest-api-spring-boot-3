@@ -131,4 +131,34 @@ public class ClienteIT {
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getId()).isEqualTo(10);
     }
+
+    @Test
+    public void buscarCliente_ComIdExistentePeloCliente_RetornarErrorMessageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    public void buscarCliente_ComIdInexistentePeloAdmin_RetornarErrorMessageComStatus404() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+    }
 }
