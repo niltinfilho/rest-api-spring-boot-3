@@ -1,6 +1,8 @@
 package br.app.gestaotec.demo_park_api.entity;
 
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,22 +19,23 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "usuarios")
+@Table(name = "clientes")
 @EntityListeners(AuditingEntityListener.class)
-public class Usuario implements Serializable {
+public class Cliente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "username", nullable = false, unique = true, length = 100)
-    private String username;
-    @Column(name = "password", nullable = false, length = 200)
-    private String password;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 13)
-    private Role role = Role.ROLE_CLIENTE;
+    @Column(name = "nome", nullable = false, length = 100)
+    private String nome;
+    @Column(name = "cpf", nullable = false, unique = true, length = 11)
+    private String cpf;
+
+    @OneToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 
     @CreatedDate
     @Column(name = "data_criacao")
@@ -50,23 +53,12 @@ public class Usuario implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return Objects.equals(id, usuario.id);
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(id, cliente.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                '}';
-    }
-
-    public enum Role {
-        ROLE_ADMIN, ROLE_CLIENTE
     }
 }
