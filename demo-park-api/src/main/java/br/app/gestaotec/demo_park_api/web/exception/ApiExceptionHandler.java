@@ -1,5 +1,6 @@
 package br.app.gestaotec.demo_park_api.web.exception;
 
+import br.app.gestaotec.demo_park_api.exception.CpfUniqueViolationException;
 import br.app.gestaotec.demo_park_api.exception.EntityNotFoundException;
 import br.app.gestaotec.demo_park_api.exception.PasswordInvalidException;
 import br.app.gestaotec.demo_park_api.exception.UsernameUniqueViolationException;
@@ -45,7 +46,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
-    @ExceptionHandler(UsernameUniqueViolationException.class)
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> uniqueViolationException(RuntimeException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
