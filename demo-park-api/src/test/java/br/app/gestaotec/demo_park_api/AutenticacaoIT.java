@@ -62,4 +62,75 @@ public class AutenticacaoIT {
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
     }
+
+    @Test
+    public void autenticar_ComUsernameInvalido_RetornarErrorMessageComStatus422() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("@email.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+    }
+
+    @Test
+    public void autenticar_ComPasswordInvalido_RetornarErrorMessageComStatus422() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("ana@email.com", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("ana@email.com", "123"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("ana@email.com", "12345678"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+    }
 }
