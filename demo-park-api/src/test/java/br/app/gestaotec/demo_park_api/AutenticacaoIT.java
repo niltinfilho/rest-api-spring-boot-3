@@ -2,6 +2,7 @@ package br.app.gestaotec.demo_park_api;
 
 import br.app.gestaotec.demo_park_api.jwt.JwtToken;
 import br.app.gestaotec.demo_park_api.web.dto.UsuarioLoginDto;
+import br.app.gestaotec.demo_park_api.web.exception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,34 @@ public class AutenticacaoIT {
                 .returnResult().getResponseBody();
 
         Assertions.assertThat(responseBody).isNotNull();
+    }
+
+    @Test
+    public void autenticar_ComCredenciaisInvalidas_RetornarErrorMessageComStatus400() {
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("invalido@email.com", "123456"))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("ana@email.com", "000000"))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
     }
 }
