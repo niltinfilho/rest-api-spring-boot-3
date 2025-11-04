@@ -344,10 +344,11 @@ public class UsuarioIT {
     }
 
     @Test
-    public void listarUsuarios_SemQualquerParametro_RetornarListaDeUsuariosComStatus200() {
+    public void listarUsuarios_ComUsuarioComPermissao_RetornarListaDeUsuariosComStatus200() {
         List<UsuarioResponseDto> responseBody = testClient
                 .get()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UsuarioResponseDto.class)
@@ -355,5 +356,33 @@ public class UsuarioIT {
 
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void listarUsuarios_ComUsuarioSemPermissao_RetornarErrorMessageComStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "maria@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+
+//        responseBody = testClient
+//                .get()
+//                .uri("/api/v1/usuarios")
+//                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBodyList(UsuarioResponseDto.class)
+//                .returnResult().getResponseBody();
+//
+//        Assertions.assertThat(responseBody).isNotNull();
+//        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
     }
 }
