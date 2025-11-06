@@ -170,4 +170,55 @@ public class EstacionamentoIT {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20230313-999999")
                 .jsonPath("method").isEqualTo("GET");
     }
+
+    @Test
+    public void criarCheckOut_ComReciboExistente_RetornarSucesso() {
+
+        testClient.put()
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("placa").isEqualTo("FIT-1020")
+                .jsonPath("marca").isEqualTo("FIAT")
+                .jsonPath("modelo").isEqualTo("PALIO")
+                .jsonPath("cor").isEqualTo("VERDE")
+                .jsonPath("dataEntrada").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("clienteCpf").isEqualTo("17542222007")
+                .jsonPath("vagaCodigo").isEqualTo("A-01")
+                .jsonPath("recibo").isEqualTo("20230313-101300")
+                .jsonPath("dataSaida").exists()
+                .jsonPath("valor").exists()
+                .jsonPath("desconto").exists();
+//        '20230313-101300', 'FIT-1020', 'FIAT', 'PALIO', 'VERDE', '2023-03-13 10:15:00'17542222007
+    }
+
+    @Test
+    public void criarCheckOut_ComReciboInexistente_RetornarErrorStatus404() {
+
+        testClient.put()
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-000000")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20230313-000000")
+                .jsonPath("method").isEqualTo("PUT");
+    }
+
+    @Test
+    public void criarCheckOut_ComRoleCliente_RetornarErrorStatus403() {
+
+        testClient.put()
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "maria@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20230313-101300")
+                .jsonPath("method").isEqualTo("PUT");
+    }
 }

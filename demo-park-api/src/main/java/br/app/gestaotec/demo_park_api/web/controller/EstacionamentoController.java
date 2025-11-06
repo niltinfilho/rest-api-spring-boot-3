@@ -5,9 +5,12 @@ import br.app.gestaotec.demo_park_api.service.ClienteVagaService;
 import br.app.gestaotec.demo_park_api.service.EstacionamentoService;
 import br.app.gestaotec.demo_park_api.web.dto.EstacionamentoCreateDto;
 import br.app.gestaotec.demo_park_api.web.dto.EstacionamentoResponseDto;
+import br.app.gestaotec.demo_park_api.web.dto.UsuarioResponseDto;
 import br.app.gestaotec.demo_park_api.web.dto.mapper.ClienteVagaMapper;
 import br.app.gestaotec.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -74,6 +77,24 @@ public class EstacionamentoController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Operação de check-out", description = "Recurso para dar saída de um veículo do estacionamento" +
+            "Requisicao exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "recibo", description = "Número do recibo gerado pelo check-in")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso atualizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Número de recibo inexistente ou " +
+                            "o veículo já passou pelo check-out.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso nao permitido ao perfil de CLIENTE",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PutMapping("/check-out/{recibo}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EstacionamentoResponseDto> checkout(@PathVariable String recibo) {
