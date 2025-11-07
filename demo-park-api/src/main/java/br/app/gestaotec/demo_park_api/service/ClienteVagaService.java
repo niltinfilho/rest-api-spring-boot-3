@@ -1,7 +1,7 @@
 package br.app.gestaotec.demo_park_api.service;
 
 import br.app.gestaotec.demo_park_api.entity.ClienteVaga;
-import br.app.gestaotec.demo_park_api.exception.EntityNotFoundException;
+import br.app.gestaotec.demo_park_api.exception.ReciboCheckInNotFoundException;
 import br.app.gestaotec.demo_park_api.repository.ClienteVagaRepository;
 import br.app.gestaotec.demo_park_api.repository.projection.ClienteVagaProjection;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,7 @@ public class ClienteVagaService {
     @Transactional(readOnly = true)
     public ClienteVaga buscarPorRecibo(String recibo) {
         return repository.findByReciboAndDataSaidaIsNull(recibo).orElseThrow(
-                () -> new EntityNotFoundException(
-                        String.format("Recibo '%s' não encontrado no sistema ou check-out já realizado", recibo)
-                )
+                () -> new ReciboCheckInNotFoundException(recibo)
         );
     }
 

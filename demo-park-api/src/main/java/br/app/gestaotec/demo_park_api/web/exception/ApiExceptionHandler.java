@@ -21,7 +21,17 @@ public class ApiExceptionHandler {
 
     private final MessageSource messageSource;
 
-    @ExceptionHandler({VagaDisponivelException.class})
+    @ExceptionHandler(ReciboCheckInNotFoundException.class)
+    public ResponseEntity<ErrorMessage> reciboCheckInNotFoundException(ReciboCheckInNotFoundException ex, HttpServletRequest request) {
+        Object[] params = new Object[]{ex.getRecibo()};
+        String message = messageSource.getMessage("exception.reciboCheckInNotFoundException", params, request.getLocale());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, message));
+    }
+
+    @ExceptionHandler(VagaDisponivelException.class)
     public ResponseEntity<ErrorMessage> vagaDisponivelException(VagaDisponivelException ex, HttpServletRequest request) {
         String message = messageSource.getMessage("exception.vagaDisponivelException", null, request.getLocale());
         return ResponseEntity
@@ -30,7 +40,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.CONFLICT, message));
     }
 
-    @ExceptionHandler({CodigoUniqueViolationException.class})
+    @ExceptionHandler(CodigoUniqueViolationException.class)
     public ResponseEntity<ErrorMessage> codigoUniqueViolationException(CodigoUniqueViolationException ex, HttpServletRequest request) {
         Object[] params = new Object[]{ex.getRecurso(), ex.getCodigo()};
         String message = messageSource.getMessage("exception.codigoUniqueViolationException", params, request.getLocale());
