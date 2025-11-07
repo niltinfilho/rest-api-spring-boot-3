@@ -21,6 +21,16 @@ public class ApiExceptionHandler {
 
     private final MessageSource messageSource;
 
+    @ExceptionHandler({CodigoUniqueViolationException.class})
+    public ResponseEntity<ErrorMessage> codigoUniqueViolationException(CodigoUniqueViolationException ex, HttpServletRequest request) {
+        Object[] params = new Object[]{ex.getRecurso(), ex.getCodigo()};
+        String message = messageSource.getMessage("exception.codigoUniqueViolationException", params, request.getLocale());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, message));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
@@ -40,18 +50,17 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorMessage> entityNotFoundException(RuntimeException ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
+    public ResponseEntity<ErrorMessage> entityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+        Object[] params = new Object[]{ex.getRecurso(), ex.getCodigo()};
+        String message = messageSource.getMessage("exception.entityNotFoundException", params, request.getLocale());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, message));
     }
 
     @ExceptionHandler({
-            UsernameUniqueViolationException.class,
-            CpfUniqueViolationException.class,
-            CodigoUniqueViolationException.class})
+            UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> uniqueViolationException(RuntimeException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
