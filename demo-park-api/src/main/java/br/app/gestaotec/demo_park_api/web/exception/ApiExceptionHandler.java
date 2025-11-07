@@ -21,6 +21,15 @@ public class ApiExceptionHandler {
 
     private final MessageSource messageSource;
 
+    @ExceptionHandler({VagaDisponivelException.class})
+    public ResponseEntity<ErrorMessage> vagaDisponivelException(VagaDisponivelException ex, HttpServletRequest request) {
+        String message = messageSource.getMessage("exception.vagaDisponivelException", null, request.getLocale());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, message));
+    }
+
     @ExceptionHandler({CodigoUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> codigoUniqueViolationException(CodigoUniqueViolationException ex, HttpServletRequest request) {
         Object[] params = new Object[]{ex.getRecurso(), ex.getCodigo()};
